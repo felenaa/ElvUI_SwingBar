@@ -150,7 +150,7 @@ local function GlobalCoolDown(self)
 	
 	bar:Show()
 	bar:SetMinMaxValues(bar.min, bar.max)
-	bar:SetScript('OnUpdate', )
+	bar:SetScript('OnUpdate', OnDurationUpdate)
 end
 
 local function Ooc(self)
