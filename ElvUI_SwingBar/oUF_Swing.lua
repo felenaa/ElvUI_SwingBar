@@ -19,6 +19,20 @@ local _, ns = ...
 local oUF = oUF or ElvUF or ns.oUF
 if not oUF then return end
 
+local classMap =
+{
+	["DRUID"] = 5176, -- "Wrath"
+	["PALADIN"] = 7328, -- "Redemption" - NOTE: Attained at level 13
+	["PRIEST"] = 585, -- "Smite"
+	["SHAMAN"] = 403, -- "Lightning Bolt"
+	["WARRIOR"] = 34428, -- "Victory Rush" - NOTE: Attained at level 5
+	["DEATHKNIGHT"] = 47541, -- "Death Coil"
+	["HUNTER"] = 3044, -- "Arcane Shot"
+	["MAGE"] = 44614, -- "Frostfire Bolt"
+	["WARLOCK"] = 686, -- "Shadow Bolt"
+	["ROGUE"] = 1752, -- "Sinister Strike"
+}
+
 local OnDurationUpdate
 do
 	local elapsed = 0
@@ -126,6 +140,19 @@ local function Ranged(self, event, unit, spellName)
 	bar:SetScript('OnUpdate', OnDurationUpdate)
 end
 
+local function GlobalCoolDown(self)
+	local class = UnitClass("player")
+	start, duration = GetSpellCooldown(classMap[class])
+	
+	local bar = self.Swing
+	bar.min = GetTime()
+	bar.max = bar.min + duration
+	
+	bar:Show()
+	bar:SetMinMaxValues(bar.min, bar.max)
+	bar:SetScript('OnUpdate', )
+end
+
 local function Ooc(self)
 	local swing = self.Swing
 	swing:Hide()
@@ -134,7 +161,10 @@ end
 local function Enable(self, unit)
 	local swing = self.Swing
 	if(swing and unit == 'player') then
-		
+		if(not swing.disableGlobalCoolDown) then
+			self:RegisterEvent('ACTIONBAR_UPDATE_COOLDOWN', GlobalCoolDown(self))
+		end
+	
 		if(not swing.disableRanged) then
 			self:RegisterEvent('UNIT_SPELLCAST_SUCCEEDED', Ranged)
 		end
@@ -159,6 +189,10 @@ end
 local function Disable(self)
 	local swing = self.Swing
 	if(swing) then
+		if(not swing.disableGlobalCoolDown) then
+			self:UnregisterEvent('ACTIONBAR_UPDATE_COOLDOWN', GlobalCoolDown)
+		end
+		
 		if(not swing.disableRanged) then
 			self:UnregisterEvent('UNIT_SPELLCAST_SUCCEEDED', Ranged)
 		end
