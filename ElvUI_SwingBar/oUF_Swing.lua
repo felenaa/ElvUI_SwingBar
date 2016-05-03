@@ -140,7 +140,7 @@ local function Ranged(self, event, unit, spellName)
 	bar:SetScript('OnUpdate', OnDurationUpdate)
 end
 
-local function GlobalCoolDown(self)
+local function GlobalCoolDown()
 	local class = UnitClass("player")
 	start, duration = GetSpellCooldown(classMap[class])
 	
@@ -162,7 +162,7 @@ local function Enable(self, unit)
 	local swing = self.Swing
 	if(swing and unit == 'player') then
 		if(not swing.disableGlobalCoolDown) then
-			self:RegisterEvent('ACTIONBAR_UPDATE_COOLDOWN', GlobalCoolDown(self))
+			self:RegisterEvent('ACTIONBAR_UPDATE_COOLDOWN', GlobalCoolDown)
 		end
 	
 		if(not swing.disableRanged) then
