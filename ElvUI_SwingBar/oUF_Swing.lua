@@ -68,7 +68,7 @@ do
 				if(self.OverrideText) then
 					self:OverrideText(elapsed)
 				else
-					self.Text:SetFormattedText('%.1f', self.max - elapsed)
+					-- self.Text:SetFormattedText('%.1f', self.max - elapsed)
 				end
 			end
 		end
@@ -140,9 +140,9 @@ local function Ranged(self, event, unit, spellName)
 	bar:SetScript('OnUpdate', OnDurationUpdate)
 end
 
-local function GlobalCoolDown()
-	local class = UnitClass("player")
-	start, duration = GetSpellCooldown(classMap[class])
+local function GlobalCoolDown(self)
+	--local class = UnitClass("player")
+	start, duration = GetSpellCooldown(585)
 	
 	local bar = self.Swing
 	bar.min = GetTime()
@@ -164,13 +164,13 @@ local function Enable(self, unit)
 		if(not swing.disableGlobalCoolDown) then
 			self:RegisterEvent('ACTIONBAR_UPDATE_COOLDOWN', GlobalCoolDown)
 		end
-	
+
 		if(not swing.disableRanged) then
-			self:RegisterEvent('UNIT_SPELLCAST_SUCCEEDED', Ranged)
+			--self:RegisterEvent('UNIT_SPELLCAST_SUCCEEDED', Ranged)
 		end
 		
 		if(not swing.disableMelee) then
-			self:RegisterEvent('COMBAT_LOG_EVENT_UNFILTERED', Melee)
+			--self:RegisterEvent('COMBAT_LOG_EVENT_UNFILTERED', Melee)
 		end
 		
 		if(not swing.disableOoc) then
@@ -192,13 +192,13 @@ local function Disable(self)
 		if(not swing.disableGlobalCoolDown) then
 			self:UnregisterEvent('ACTIONBAR_UPDATE_COOLDOWN', GlobalCoolDown)
 		end
-		
+
 		if(not swing.disableRanged) then
-			self:UnregisterEvent('UNIT_SPELLCAST_SUCCEEDED', Ranged)
+			--self:UnregisterEvent('UNIT_SPELLCAST_SUCCEEDED', Ranged)
 		end
 
 		if(not swing.disableMelee) then
-			self:UnregisterEvent('COMBAT_LOG_EVENT_UNFILTERED', Melee)
+			--self:UnregisterEvent('COMBAT_LOG_EVENT_UNFILTERED', Melee)
 		end
 		
 		if(not swing.disableOoc) then
